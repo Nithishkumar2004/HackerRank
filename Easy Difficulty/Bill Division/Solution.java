@@ -13,34 +13,31 @@ import static java.util.stream.Collectors.toList;
 class Result {
 
     /*
-     * Complete the 'bonAppetit' function below.
+     * Complete the 'breakingRecords' function below.
      *
-     * The function accepts following parameters:
-     *  1. INTEGER_ARRAY bill
-     *  2. INTEGER k
-     *  3. INTEGER b
+     * The function is expected to return an INTEGER_ARRAY.
+     * The function accepts INTEGER_ARRAY scores as parameter.
      */
 
-    public static void bonAppetit(List<Integer> bill, int k, int b) {
-    // Write your code here
-         // Calculate the total bill
-        int totalBill = 0;
-        for (int i = 0; i < bill.size(); i++) {
-            totalBill += bill.get(i);
+    public static List<Integer> breakingRecords(List<Integer> scores) {
+        List<Integer> result = new ArrayList<>();
+        int least=0,high=0,max=scores.get(0),min=scores.get(0);
+        for(Integer i:scores)
+        {
+            if(max<i)
+            {
+                max=i;
+                high++;
+            }
+            if(min>i)
+            {
+                min=i;
+                least++;
+            }
         }
-        
-        // Subtract the item Anna didn't eat
-        int annaShare = (totalBill - bill.get(k)) / 2;
-        
-        // Calculate the difference
-        int difference = b - annaShare;
-        
-        // Print the result
-        if (difference == 0) {
-            System.out.println("Bon Appetit");
-        } else {
-            System.out.println(difference);
-        }
+        result.add(high);
+        result.add(least);
+        return result;
 
     }
 
@@ -49,21 +46,24 @@ class Result {
 public class Solution {
     public static void main(String[] args) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
 
-        String[] firstMultipleInput = bufferedReader.readLine().replaceAll("\\s+$", "").split(" ");
+        int n = Integer.parseInt(bufferedReader.readLine().trim());
 
-        int n = Integer.parseInt(firstMultipleInput[0]);
-
-        int k = Integer.parseInt(firstMultipleInput[1]);
-
-        List<Integer> bill = Stream.of(bufferedReader.readLine().replaceAll("\\s+$", "").split(" "))
+        List<Integer> scores = Stream.of(bufferedReader.readLine().replaceAll("\\s+$", "").split(" "))
             .map(Integer::parseInt)
             .collect(toList());
 
-        int b = Integer.parseInt(bufferedReader.readLine().trim());
+        List<Integer> result = Result.breakingRecords(scores);
 
-        Result.bonAppetit(bill, k, b);
+        bufferedWriter.write(
+            result.stream()
+                .map(Object::toString)
+                .collect(joining(" "))
+            + "\n"
+        );
 
         bufferedReader.close();
+        bufferedWriter.close();
     }
 }
